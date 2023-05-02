@@ -2,10 +2,15 @@ package ru.kata.spring.boot_security.demo.dao;
 
 import org.springframework.security.core.GrantedAuthority;
 import ru.kata.spring.boot_security.demo.model.Role;
+import ru.kata.spring.boot_security.demo.model.UserEntity;
 
 import java.util.Collection;
 import java.util.List;
 
 public interface RoleDao {
     public Collection<GrantedAuthority> mapRolesToAuthorities(List<Role> roles);
+
+    public List<Role> getAllURoles();
+
+    public Role getRoleById(Long id);
 }

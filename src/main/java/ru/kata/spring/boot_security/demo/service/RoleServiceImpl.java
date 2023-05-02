@@ -21,4 +21,14 @@ public class RoleServiceImpl implements RoleService {
     public Collection<GrantedAuthority> mapRolesToAuthorities(List<Role> roles) {
         return roleDao.mapRolesToAuthorities(roles);
     }
+
+    @Override
+    public List<Role> getAllURoles() {
+        return roleDao.getAllURoles();
+    }
+
+    @Override
+    public Role getRoleById(Long id) {
+        return roleDao.getRoleById(id);
+    }
 }

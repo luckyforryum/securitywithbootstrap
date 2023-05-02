@@ -7,9 +7,9 @@ import java.util.Optional;
 public interface UserService {
     public List<UserEntity> getAllUsers();
 
-    Optional<UserEntity> findByUsername(String username);
+    Optional<UserEntity> findByEmail(String email);
 
-    public UserEntity getInfoByUsername(String username);
+    public UserEntity getInfoByEmail(String email);
 
     public void save(UserEntity user);
 

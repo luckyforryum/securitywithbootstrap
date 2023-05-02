@@ -1,60 +1,361 @@
-
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Admin panel</title>
+    <link rel="icon"  href="https://camo.githubusercontent.com/6b1f3330d7c78d39bf3d126a1d1742a5fe38d712dceaa52ee051c35211f76614/68747470733a2f2f7777772e7365656b706e672e636f6d2f706e672f66756c6c2f382d38303737355f737072696e672d6c6f676f2d706e672d7472616e73706172656e742d737072696e672d6a6176612e706e67">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css"
+          integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous">
+</head>
 <body>
 
+<nav class="navbar navbar-dark bg-dark">
+    <div>
+        <span th:text = "${email}" class="text-white"> </span>
+        <span class="text-white"> with roles: </span>
+        <tr th:each="role :${roles}" >
+            <span th:utext = "${role.getName()}"  class="text-white"> </span>
+        </tr>
+    </div>
+    <span class="ml-auto"><a class="nav-link text-light" href="/logout">Logout</a></span>
+</nav>
 
 
-<table border="1" >
-    <tr>
-        <th>Id</th>
-        <th>Name</th>
-        <th>LastName</th>
-        <th>Role</th>
-        <th>Operations</th>
-    </tr>
+<div class="row" >
+    <div class="col-2 mt-3 p-0">
+        <div class="nav flex-column nav-pills" role="tablist" aria-orientation="vertical">
+            <a class="nav-item nav-link ml-2 active" data-toggle="pill" href="#apanel" role="tab"
+               aria-controls="apanel" aria-selected="true">Admin</a>
+            <a class="nav-item nav-link ml-2" data-toggle="pill" href="#upanel" role="tab"
+               aria-controls="upanel" aria-selected="true">User</a>
+        </div>
+    </div>
+    <div class="col-10 p-0">
+        <div class="tab-content bg-light p-5">
+            <div class="tab-pane fade show active pl-3" style="height: 1000px;" id="apanel" role="tabpanel"
+                 aria-labelledby="apanel">
+                <h1>Admin panel</h1>
+                <nav>
+                    <div class="nav nav-tabs" role="tablist">
+                        <a class="nav-item nav-link active" data-toggle="tab" role="tab" href="#users_table">Users
+                            table</a>
+                        <a class="nav-item nav-link" data-toggle="tab" role="tab" href="#new_user">New User</a>
+                    </div>
+                </nav>
+                <div class="tab-content" >
+                    <div class="tab-pane fade show active border" id="users_table" role="tabpanel">
+                        <div class="pl-3 pt-1 d-flex border-bottom"><h4> All users</h4></div>
+                        <div class="bg-white p-3">
+                            <table class="table table-striped border-top">
+                                <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>First Name</th>
+                                    <th>Last Name</th>
+                                    <th>Age</th>
+                                    <th>Email</th>
+                                    <th>Role</th>
+                                    <th>Edit</th>
+                                    <th>Delete</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="user :${allUsers}">
+                                    <td th:utext="${user.id}">Id</td>
+                                    <td th:utext="${user.firstname}">First Name</td>
+                                    <td th:utext="${user.lastname}">Last Name</td>
+                                    <td th:utext="${user.age}">Age</td>
+                                    <td th:utext="${user.email}">Email</td>
+                                    <td><span th:each="role : ${user.getRoles()}" th:utext="${role.getName()} + ' '"></span></td>
+                                    <td>
+
+                                        <button id="edit-user" type="button" class="btn btn-success" data-toggle="modal" data-target="#userEditDialog" th:attrappend="data-target=${user.id}"
+                                                style="background-color: aquamarine; border: none; color: white; border-radius: 5px">
+                                            Edit
+                                        </button>
+
+                                        <div id="userEditDialog" th:attrappend="id=${user.id}"
+                                             class="modal fade" tabindex="-1" role="dialog"
+                                             aria-labelledby="TitleModalLabel" aria-hidden="true"
+                                             data-backdrop="static" data-keyboard="false">
+                                            <div class="modal-dialog modal-dialog-scrollable">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="TitleModalLabel1">Edit user</h5>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                                aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body bg-white">
+                                                        <form id="formEditUser" th:attrappend="id=${user.id}"
+                                                              method="post"
+                                                              th:action="@{/admin/showAllUsers/update-info}"
+
+                                                              class="form-signin mx-auto font-weight-bold text-center"
+                                                              style="width: 200px;">
+                                                            <p>
+                                                                <label for="id">ID</label>
+                                                                <input class="form-control form-control-sm" type="text"
+                                                                       name="id" id="id" readonly
+                                                                       th:value="${user.id}">
+                                                            </p>
+                                                            <p>
+                                                                <label for="firstname">First name</label>
+                                                                <input class="form-control form-control-sm" type="text"
+                                                                       name="firstname" th:value="${user.firstname}"
+                                                                       id="firstname" placeholder="First name" required
+                                                                       autofocus>
+                                                            </p>
+                                                            <p>
+                                                                <label for="lastname">Last name</label>
+                                                                <input class="form-control form-control-sm" type="text"
+                                                                       name="lastname" th:value="${user.lastname}"
+                                                                       id="lastname" placeholder="Last name">
+                                                            </p>
+                                                            <p>
+                                                                <label for="age">Age</label>
+                                                                <input class="form-control form-control-sm"
+                                                                       type="number"
+                                                                       name="age" th:value="${user.age}"
+                                                                       id="age" placeholder="Age">
+                                                            </p>
+                                                            <p>
+                                                                <label for="email">Email</label>
+                                                                <input class="form-control form-control-sm" type="email"
+                                                                       name="email" id="email" th:value="${user.email}"
+                                                                       placeholder="Email" required>
+                                                            </p>
+                                                            <p>
+                                                                <label for="passwd">Password</label>
+                                                                <input class="form-control form-control-sm"
+                                                                       type="password"
+                                                                       name="password" th:value="${user.password}"
+                                                                       id="passwd" placeholder="Password" required>
+                                                            </p>
+                                                            <p>
+                                                                <label for="roles">Role</label>
+                                                                <select id="roles" name="roles"
+                                                                        class="form-control form-control-sm"
+                                                                        multiple size="2" required>
+                                                                    <option th:each="role : ${allRoles}"
+                                                                            th:value="${role.id}"
+                                                                            th:text="${role.name}"
+                                                                            th:selected="${user.roles.contains(role)}">
+                                                                    </option>
+                                                                </select>
+                                                            </p>
+                                                        </form>
+
+
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                                data-dismiss="modal">Close
+                                                        </button>
+                                                        <button type="submit" form="formEditUser"
+                                                                th:attrappend="form=${user.id}"
+                                                                class="btn btn-primary">Edit
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+
+
+                                    <td>
+
+                                        <a role="button"
+                                           class="btn btn-danger btn-sm"
+                                           data-toggle="modal"
+                                           data-target="#deleteModal"
+                                           th:attrappend="data-target=${user.id}">Delete</a>
+                                        <!-- Modal window-->
+                                        <div id="deleteModal" th:attrappend="id=${user.id}"
+                                             class="modal fade" tabindex="-1" role="dialog"
+                                             aria-labelledby="TitleModalLabel" aria-hidden="true"
+                                             data-backdrop="static" data-keyboard="false">
+                                            <div class="modal-dialog modal-dialog-scrollable">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <h5 class="modal-title" id="TitleModalLabel">Edit user</h5>
+                                                        <button type="button" class="close" data-dismiss="modal"
+                                                                aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body bg-white">
+                                                        <form id="formDeleteUser" th:attrappend="id=${user.id}"
+                                                              method="post"
+                                                              th:action="@{/admin/showAllUsers/{userId}(userId = ${user.id})}"
+
+                                                              class="form-signin mx-auto font-weight-bold text-center"
+                                                              style="width: 200px;">
+                                                            <p>
+                                                                <label for="del_id">ID</label>
+                                                                <input class="form-control form-control-sm" type="text"
+                                                                       name="id" id="del_id" readonly
+                                                                       th:value="${user.id}">
+                                                            </p>
+                                                            <p>
+                                                                <label for="del_name">First name</label>
+                                                                <input class="form-control form-control-sm" type="text"
+                                                                       name="firstname" th:value="${user.firstname}"
+                                                                       id="del_name" readonly
+                                                                       placeholder="First name" autofocus>
+                                                            </p>
+                                                            <p>
+                                                                <label for="del_lastName">Last name</label>
+                                                                <input class="form-control form-control-sm" type="text"
+                                                                       name="lastname" th:value="${user.lastname}"
+                                                                       id="del_lastName" readonly
+                                                                       placeholder="Last name">
+                                                            </p>
+                                                            <p>
+                                                                <label for="del_age">Age</label>
+                                                                <input class="form-control form-control-sm"
+                                                                       type="number"
+                                                                       name="age" th:value="${user.age}"
+                                                                       id="del_age" readonly
+                                                                       placeholder="Age">
+                                                            </p>
+                                                            <p>
+                                                                <label for="del_email">Email</label>
+                                                                <input class="form-control form-control-sm" type="email"
+                                                                       name="email" id="del_email" readonly
+                                                                       th:value="${user.email}"
+                                                                       placeholder="Email">
+                                                            </p>
+                                                            <p>
+                                                                <label for="del_roles">Role</label>
+                                                                <select id="del_roles" name="roles"
+                                                                        class="form-control form-control-sm"
+                                                                        multiple size="2" readonly>
+                                                                    <option th:each="role : ${allRoles}"
+                                                                            th:value="${role.id}"
+                                                                            th:text="${role.name}"
+                                                                            th:selected="${user.roles.contains(role)}">
+                                                                    </option>
+                                                                </select>
+                                                            </p>
+                                                        </form>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-secondary"
+                                                                data-dismiss="modal">Close
+                                                        </button>
+                                                        <button type="submit" form="formDeleteUser"
+                                                                th:attrappend="form=${user.id}"
+                                                                class="btn btn-danger">Delete
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+
+                    <div class="tab-pane fade border" id="new_user" role="tabpanel">
+                        <div class="pl-3 pt-1 d-flex border-bottom"><h4> Add new user</h4></div>
+                            <div class="bg-white p-3">
+                            <form class="form-signin mx-auto font-weight-bold text-center p-3"
+                                  style="width: 300px;" th:action="@{/addNewUser}" method="post" >
+
+                                <p>
+                                    <label for="newName">First name</label>
+                                    <input class="form-control form-control-sm" type="text"
+                                           name="firstname" id="newName" placeholder="First name" required autofocus>
+                                </p>
+                                <p>
+                                    <label for="newLastName">Last name</label>
+                                    <input class="form-control form-control-sm" type="text"
+                                           name="lastname" id="newLastName" placeholder="Last name">
+                                </p>
+                                <p>
+                                    <label for="newAge">Age</label>
+                                    <input class="form-control form-control-sm" type="number"
+                                           name="age" id="newAge" placeholder="Age" value="">
+                                </p>
+                                <p>
+                                    <label for="newEmail">Email</label>
+                                    <input class="form-control form-control-sm" type="email"
+                                           name="email" id="newEmail" placeholder="Email" required>
+                                </p>
+                                <p>
+                                    <label for="newPasswd">Password</label>
+                                    <input class="form-control form-control-sm" type="password"
+                                           name="password" id="newPasswd" placeholder="Password" required>
+                                </p>
+                                <p>
+                                    <label for="newRoles">Role</label>
+                                    <select class="form-control form-control-sm" id="newRoles" name="roles" multiple
+                                            size="2" required>
+                                        <option th:each="role : ${allRoles}"
+                                                th:value="${role.id}"
+                                                th:text="${role.name}"></option>
+                                    </select>
+                                </p>
+                                <button class="btn btn-success" style="background-color: green" type="submit">Add new user</button>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
 
 
 
-    <tr th:each="user :${allUsers}">
+            <div class="tab-pane fade pl-3" style="height: 1000px;" id="upanel" role="tabpanel"
+                 aria-labelledby="upanel">
+                <h1>User information-page</h1>
+                <div class="pl-3 pt-1 d-flex border-top border-left border-right"><h4> About user</h4></div>
+                <div class="bg-white border p-3">
+                    <table class="table table-striped border-top">
+                        <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Age</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="user :${thisUser}">
+                            <td th:utext="${user.id}">Id</td>
+                            <td th:utext="${user.firstname}">First Name</td>
+                            <td th:utext="${user.lastname}">Last Name</td>
+                            <td th:utext="${user.age}">Age</td>
+                            <td th:utext="${user.email}">Email</td>
+                            <td><span th:each="role : ${user.getRoles()}" th:utext="${role.getName()} + ' '"></span></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
 
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"
+        integrity="sha256-9/aliU8dGd2tb6OSsuzixeV4y/faTqgFtohetphbbj0=" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js"
+        integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/"
+        crossorigin="anonymous"></script>
 
-        <td th:utext="${user.getId()}">Id</td>
-        <td th:utext="${user.getFirstname()}">Name</td>
-        <td th:utext="${user.getLastname()}">LastName</td>
-        <td th:utext="${user.getRoles}">Role</td>
-
-        <td>
-            <form th:action="@{/admin/showAllUsers/update-info/{userId}(userId = ${user.getId()})}" >
-                <button type="submit">Update</button>
-            </form>
-
-
-            <form th:action="@{/admin/showAllUsers/{userId}(userId = ${user.getId()})}" th:method="DELETE">
-                <button type="submit">Delete</button>
-            </form>
-        </td>
-
-
-    </tr>
-</table>
-
-<br>
-    <input type="button" value="Add"
-           onclick="window.location.href = '/admin/showAllUsers/addNewUser'" th:method="POST"/>
-<br>
-<br>
-<br>
-<input type="button" value="to /user"
-       onclick="window.location.href = '/user'" th:method="POST"/>
-<br>
-<br>
-<form action="/logout" method="GET">
-    <button type="submit">LOGOUT</button>
-</form>
 </body>
 </html>
-
-

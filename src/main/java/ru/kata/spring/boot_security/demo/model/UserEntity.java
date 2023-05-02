@@ -11,8 +11,10 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Objects;
+
 
 @Entity
 @Table(name="users")
@@ -21,14 +23,17 @@ public class UserEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="id")
     private Long id;
-    @Column(name="username")
-    private String username;
+
     @Column(name="firstname")
     private String firstname;
     @Column(name="lastname")
     private String lastname;
     @Column(name="password")
     private String password;
+    @Column(name="age")
+    private int age;
+    @Column(name="email")
+    private String email;
     @ManyToMany(cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
     @JoinTable(
             name = "users_roles",
@@ -40,10 +45,15 @@ public class UserEntity {
     public UserEntity() {
 
 }
-    public UserEntity(String username, String firstname, String lastname) {
-        this.username = username;
+
+    public UserEntity(Long id, String firstname, String lastname, String password, int age, String email, List<Role> roles) {
+        this.id = id;
         this.firstname = firstname;
         this.lastname = lastname;
+        this.password = password;
+        this.age = age;
+        this.email = email;
+        this.roles = roles;
     }
 
     public Long getId() {
@@ -54,13 +64,7 @@ public class UserEntity {
         this.id = id;
     }
 
-    public String getUsername() {
-        return username;
-    }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
 
     public String getFirstname() {
         return firstname;
@@ -86,6 +90,22 @@ public class UserEntity {
         this.password = password;
     }
 
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public List<Role> getRoles() {
         return roles;
     }
@@ -94,30 +114,34 @@ public class UserEntity {
         this.roles = roles;
     }
 
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        UserEntity user = (UserEntity) o;
-        return Objects.equals(id, user.id) && Objects.equals(username, user.username) && Objects.equals(firstname, user.firstname) && Objects.equals(lastname, user.lastname) && Objects.equals(password, user.password) && Objects.equals(roles, user.roles);
+        UserEntity that = (UserEntity) o;
+        return age == that.age && Objects.equals(id, that.id) && Objects.equals(firstname, that.firstname) && Objects.equals(lastname, that.lastname) && Objects.equals(password, that.password) && Objects.equals(email, that.email) && Objects.equals(roles, that.roles);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, username, firstname, lastname, password, roles);
+        return Objects.hash(id, firstname, lastname, password, age, email, roles);
     }
 
     @Override
     public String toString() {
-        return "User{" +
+        return "UserEntity{" +
                 "id=" + id +
-                ", username='" + username + '\'' +
                 ", firstname='" + firstname + '\'' +
                 ", lastname='" + lastname + '\'' +
                 ", password='" + password + '\'' +
+                ", age=" + age +
+                ", email='" + email + '\'' +
                 ", roles=" + roles +
                 '}';
     }
+
 
 
 }

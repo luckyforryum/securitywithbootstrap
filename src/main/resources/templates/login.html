@@ -1,22 +1,44 @@
+<!DOCTYPE html>
 <html lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org">
 <head>
+    <title>Login page</title>
     <meta charset="utf-8">
-    <title>Login Customer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<!--    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous">-->
+    <link href="https://getbootstrap.com/docs/4.0/examples/signin/signin.css" rel="stylesheet" crossorigin="anonymous"/>
+    <link rel="shortcut icon" href="https://camo.githubusercontent.com/6b1f3330d7c78d39bf3d126a1d1742a5fe38d712dceaa52ee051c35211f76614/68747470733a2f2f7777772e7365656b706e672e636f6d2f706e672f66756c6c2f382d38303737355f737072696e672d6c6f676f2d706e672d7472616e73706172656e742d737072696e672d6a6176612e706e67"/>
 </head>
 <body>
+
+
+
 <div class="container">
-    <form class="form-signin" method="post" action="/auth/login">
-        <h2 class="form-signin-heading">Login</h2>
+    <form class="form-signin" method="post" th:action="@{/login}" >
+        <h2 class="form-signin-heading">Please sign in</h2>
+        <div th:if="${param.error}">
+            <p class="text-danger">[[${session.SPRING_SECURITY_LAST_EXCEPTION.message}]]</p>
+        </div>
+
         <p>
-            <label for="username">Username</label>
-            <input type="text" id="username" name="username" class="form-control" placeholder="Username" required>
+            <label for="email1" class="sr-only">Email address</label>
+            <input type="email" id="email1" name="email" class="form-control" placeholder="E-mail" required autofocus />
         </p>
         <p>
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
+            <label for="pass" class="sr-only">Email address</label>
+            <input type="password" id="pass" name="password" class="form-control" placeholder="Password" required />
         </p>
+        <input name="_csrf" type="hidden" value="4b482ba9-9594-476d-9cd1-a8700173791e" />
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
     </form>
 </div>
 </body>
 </html>
+</html>
+
+
+

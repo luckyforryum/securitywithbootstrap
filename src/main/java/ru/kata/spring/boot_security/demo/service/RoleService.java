@@ -8,4 +8,8 @@ import java.util.List;
 
 public interface RoleService {
     public Collection<GrantedAuthority> mapRolesToAuthorities(List<Role> roles);
+
+    public List<Role> getAllURoles();
+
+    public Role getRoleById(Long id);
 }

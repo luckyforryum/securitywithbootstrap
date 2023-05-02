@@ -24,11 +24,12 @@ public class UserDaoImpl implements UserDao {
         return entityManager.createQuery("from UserEntity", UserEntity.class).getResultList();
     }
 
+
     @Override
-    public Optional<UserEntity> findByUsername(String username) {
-        String queryStr = "SELECT u FROM UserEntity u LEFT JOIN FETCH u.roles WHERE u.username = :username";
+    public Optional<UserEntity> findByEmail(String email) {
+        String queryStr = "SELECT u FROM UserEntity u LEFT JOIN FETCH u.roles WHERE u.email = :email";
         TypedQuery<UserEntity> query = entityManager.createQuery(queryStr, UserEntity.class);
-        query.setParameter("username", username);
+        query.setParameter("email", email);
         UserEntity UserEntity;
         try {
             UserEntity = query.getSingleResult();
@@ -39,11 +40,12 @@ public class UserDaoImpl implements UserDao {
         return Optional.ofNullable(UserEntity);
     }
 
+
     @Override
-    public UserEntity getInfoByUsername(String username) {
+    public UserEntity getInfoByEmail(String email) {
         TypedQuery<UserEntity> query = entityManager.createQuery(
-                "SELECT u FROM UserEntity u WHERE u.username = :username", UserEntity.class);
-        query.setParameter("username", username);
+                "SELECT u FROM UserEntity u WHERE u.email = :email", UserEntity.class);
+        query.setParameter("email", email);
         UserEntity users = query.getSingleResult();
         return users;
     }

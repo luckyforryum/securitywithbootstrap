@@ -22,16 +22,19 @@ public class UserServiceImpl implements UserService {
         return userDao.getAllUsers();
     }
 
-    @Override
-    @Transactional
-    public Optional<UserEntity> findByUsername(String username) {
-        return userDao.findByUsername(username);
-    }
+
 
     @Override
     @Transactional
-    public UserEntity getInfoByUsername(String username) {
-        return userDao.getInfoByUsername(username);
+    public Optional<UserEntity> findByEmail(String email) {
+        return userDao.findByEmail(email);
+    }
+
+
+    @Override
+    @Transactional
+    public UserEntity getInfoByEmail(String email) {
+        return userDao.getInfoByEmail(email);
     }
 
     @Override

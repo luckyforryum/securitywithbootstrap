@@ -22,8 +22,12 @@ public class UserController {
 
     @GetMapping("/user")
     public String pageForUser(Principal principal, Model model) {
-        UserEntity userEntity1 =  userService.getInfoByUsername(principal.getName());
+        UserEntity userEntity1 =  userService.getInfoByEmail(principal.getName());
+        String email = principal.getName();
+
         model.addAttribute("thisUser",userEntity1);
+        model.addAttribute("email",email);
+        model.addAttribute("roles",userEntity1.getRoles());
         return "user";
     }
 
