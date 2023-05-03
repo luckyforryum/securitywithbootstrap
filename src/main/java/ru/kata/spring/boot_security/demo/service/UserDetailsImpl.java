@@ -1,5 +1,5 @@
 package ru.kata.spring.boot_security.demo.service;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -14,7 +14,7 @@ public class UserDetailsImpl implements UserDetailsService {
     private final UserService userService;
 
     private final RoleService roleService;
-    @Autowired
+
     public UserDetailsImpl(UserService userService, RoleService roleService) {
         this.userService = userService;
         this.roleService = roleService;

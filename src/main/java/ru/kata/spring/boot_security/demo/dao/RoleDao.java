@@ -2,8 +2,6 @@ package ru.kata.spring.boot_security.demo.dao;
 
 import org.springframework.security.core.GrantedAuthority;
 import ru.kata.spring.boot_security.demo.model.Role;
-import ru.kata.spring.boot_security.demo.model.UserEntity;
-
 import java.util.Collection;
 import java.util.List;
 

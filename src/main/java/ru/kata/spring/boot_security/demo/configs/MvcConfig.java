@@ -1,5 +1,4 @@
 package ru.kata.spring.boot_security.demo.configs;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.format.FormatterRegistry;
@@ -13,7 +12,6 @@ import ru.kata.spring.boot_security.demo.Conventer.StringToRoleConverter;
 @ComponentScan(basePackages = "ru.kata.spring.boot_security.demo.controller")
 public class MvcConfig implements WebMvcConfigurer {
     private final StringToRoleConverter stringArrayToRoleListConverter;
-    @Autowired
     public MvcConfig(StringToRoleConverter stringArrayToRoleListConverter) {
         this.stringArrayToRoleListConverter = stringArrayToRoleListConverter;
     }

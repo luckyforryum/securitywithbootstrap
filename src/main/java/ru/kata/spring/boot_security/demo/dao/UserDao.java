@@ -11,7 +11,6 @@ public interface UserDao {
 
     public UserEntity getInfoByEmail(String email);
 
-
     public void save(UserEntity user);
 
     public void update(UserEntity user);

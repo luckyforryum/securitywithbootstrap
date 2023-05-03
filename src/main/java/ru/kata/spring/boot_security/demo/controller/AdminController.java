@@ -1,5 +1,4 @@
 package ru.kata.spring.boot_security.demo.controller;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,10 +15,9 @@ import java.util.List;
 @Controller
 public class AdminController {
 
-
     private final UserService userService;
     private final RoleService roleService;
-    @Autowired
+
     public AdminController(UserService userService, RoleService roleService) {
         this.userService = userService;
         this.roleService = roleService;
@@ -31,23 +29,14 @@ public class AdminController {
     @GetMapping("/admin/showAllUsers")
     public String showAllUsers(Principal principal,Model model) {
         List<UserEntity> allUsers = userService.getAllUsers();
-        String email = principal.getName();
-        UserEntity userEntity = userService.getInfoByEmail(email);
-        model.addAttribute("email",email);
+        UserEntity userEntity = userService.getInfoByEmail(principal.getName());
+        model.addAttribute("email",principal.getName());
         model.addAttribute("roles",userEntity.getRoles());
         model.addAttribute("allRoles",roleService.getAllURoles());
         model.addAttribute("allUsers",allUsers);
         model.addAttribute("thisUser",userEntity);
         return "all-users";
     }
-
-//    @GetMapping("/admin/showAllUsers/addNewUser")
-//    public String addNewUser(Model model) {
-//        UserEntity user = new UserEntity();
-//        model.addAttribute("user",user);
-//        return "user-info";
-//    }
-
 
     @PostMapping("/addNewUser")
     public String saveUser(@ModelAttribute UserEntity user) {

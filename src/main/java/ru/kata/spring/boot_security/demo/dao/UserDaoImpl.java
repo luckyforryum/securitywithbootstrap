@@ -1,19 +1,20 @@
 package ru.kata.spring.boot_security.demo.dao;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 import ru.kata.spring.boot_security.demo.model.UserEntity;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
+import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.util.List;
 import java.util.Optional;
 @Repository
 public class UserDaoImpl implements UserDao {
+    @PersistenceContext
     private final EntityManager entityManager;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
-    @Autowired
+
     public UserDaoImpl(EntityManager entityManager, BCryptPasswordEncoder bCryptPasswordEncoder) {
         this.entityManager = entityManager;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
@@ -27,8 +28,8 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public Optional<UserEntity> findByEmail(String email) {
-        String queryStr = "SELECT u FROM UserEntity u LEFT JOIN FETCH u.roles WHERE u.email = :email";
-        TypedQuery<UserEntity> query = entityManager.createQuery(queryStr, UserEntity.class);
+        TypedQuery<UserEntity> query = entityManager.createQuery("SELECT u FROM UserEntity u LEFT JOIN FETCH u.roles WHERE u.email = :email"
+                , UserEntity.class);
         query.setParameter("email", email);
         UserEntity UserEntity;
         try {
@@ -46,14 +47,12 @@ public class UserDaoImpl implements UserDao {
         TypedQuery<UserEntity> query = entityManager.createQuery(
                 "SELECT u FROM UserEntity u WHERE u.email = :email", UserEntity.class);
         query.setParameter("email", email);
-        UserEntity users = query.getSingleResult();
-        return users;
+        return query.getSingleResult();
     }
 
     @Override
     public void save(UserEntity user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
-
         entityManager.merge(user);
 
     }
