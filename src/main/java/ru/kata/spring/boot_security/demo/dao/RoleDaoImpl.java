@@ -15,11 +15,7 @@ import java.util.stream.Collectors;
 public class RoleDaoImpl implements RoleDao {
 
     @PersistenceContext
-    private final EntityManager entityManager;
-
-    public RoleDaoImpl(EntityManager entityManager) {
-        this.entityManager = entityManager;
-    }
+    private EntityManager entityManager;
 
     @Override
     public Collection<GrantedAuthority> mapRolesToAuthorities(List<Role> roles) {
@@ -35,8 +31,7 @@ public class RoleDaoImpl implements RoleDao {
     public Role getRoleById(Long id) {
         TypedQuery<Role> query = entityManager.createQuery(
                 "SELECT u FROM Role u WHERE u.id = :id", Role.class);
-        query.setParameter("id", id);
-        return query.getSingleResult();
+        return query.setParameter("id", id).getSingleResult();
     }
 
 

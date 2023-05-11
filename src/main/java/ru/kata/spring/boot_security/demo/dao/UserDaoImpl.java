@@ -12,11 +12,11 @@ import java.util.Optional;
 @Repository
 public class UserDaoImpl implements UserDao {
     @PersistenceContext
-    private final EntityManager entityManager;
+    private EntityManager entityManager;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    public UserDaoImpl(EntityManager entityManager, BCryptPasswordEncoder bCryptPasswordEncoder) {
-        this.entityManager = entityManager;
+    public UserDaoImpl(BCryptPasswordEncoder bCryptPasswordEncoder) {
+
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
@@ -46,15 +46,13 @@ public class UserDaoImpl implements UserDao {
     public UserEntity getInfoByEmail(String email) {
         TypedQuery<UserEntity> query = entityManager.createQuery(
                 "SELECT u FROM UserEntity u WHERE u.email = :email", UserEntity.class);
-        query.setParameter("email", email);
-        return query.getSingleResult();
+        return query.setParameter("email", email).getSingleResult();
     }
 
     @Override
     public void save(UserEntity user) {
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         entityManager.merge(user);
-
     }
 
     @Override
